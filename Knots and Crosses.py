@@ -1,6 +1,6 @@
 def print_grid_reference():
     print("     |     |     ")
-    print("  1  |  2  |  3  ")
+    print("  7  |  8  |  9  ")
     print("     |     |     ")
     print("-----------------")
     print("     |     |     ")
@@ -8,7 +8,7 @@ def print_grid_reference():
     print("     |     |     ")
     print("-----------------")
     print("     |     |     ")
-    print("  7  |  8  |  9  ")
+    print("  1  |  2  |  3  ")
     print("     |     |     ")
     print("\n\n")
 
@@ -179,7 +179,7 @@ def _XX():
     print("     | / \ | / \ ")
 
 
-def print_top_row():
+def print_bottom_row():
 
     o_position = top_row_o_position
     x_position = top_row_x_position
@@ -317,7 +317,7 @@ def print_middle_row():
         _XX()
 
 
-def print_bottom_row():
+def print_top_row():
 
     o_position = bottom_row_o_position
     x_position = bottom_row_x_position
@@ -479,10 +479,10 @@ def would_you_like_to_play_again():
     question_answered = False
     while not question_answered:
         play_again = input("\n\n\n\nWould you like to play again? Y/N: ").lower()
-        if play_again == "y":
+        if play_again in ("y", "yes"):
             play_game = True
             question_answered = True
-        elif play_again == "n":
+        elif play_again in ("n", "no"):
             play_game = False
             question_answered = True
         else:
@@ -501,51 +501,71 @@ def clear_screen():
         print()
 
 
-play_game = True
+def position_of_O_validated():
+    global player_o_latest_number
+    valid_number_choice = False
+    while not valid_number_choice:
+        raw_input_o = input(Player_O + ", please enter a number from the reference grid to lay down your naught: ")
+        if raw_input_o.isdigit():
+            player_o_latest_number = int(raw_input_o)
+            if player_o_latest_number in used_numbers:
+                print("\nThat number has already been chosen. Try again.")
+            elif player_o_latest_number not in (1, 2, 3, 4, 5, 6, 7, 8, 9):
+                print("\nThat was not a valid choice. See the grid above")
+            else:
+                used_numbers.append(player_o_latest_number)
+                valid_number_choice = True
+        else:
+            print("\nPlease only enter numbers, between 1 & 9!")
 
+def position_of_X_validated():
+    global player_x_latest_number
+    valid_number_choice = False
+    while not valid_number_choice:
+        raw_input_x = input(Player_X + ", please enter a number from the reference grid to lay down your cross: ")
+        if raw_input_x.isdigit():
+            player_x_latest_number = int(raw_input_x)
+            if player_x_latest_number in used_numbers:
+                print("\nThat number has already been chosen. Try again.")
+            elif player_x_latest_number not in (1, 2, 3, 4, 5, 6, 7, 8, 9):
+                print("\nThat was not a valid choice. See the grid above")
+            elif str(player_x_latest_number) not in ("1", "2", "3", "4", "5", "6", "7", "8", "9"):
+                print("\nThat was not a valid choice. See the grid above")
+            else:
+                used_numbers.append(player_x_latest_number)
+                valid_number_choice = True
+        else:
+            print("\nPlease only enter numbers, between 1 & 9!")
+
+
+play_game = True
 while play_game:
 
     clear_screen()
     print("NOUGHTS & CROSSES\n\n\n\n\n\n")
-
     Player_O = input("Player O, please enter your name: ")
     Player_X = input("Player X, please enter your name: ")
 
     used_numbers = []
 
-    clear_screen()
-
     top_row_o_position = []
     top_row_x_position = []
-
     mid_row_o_position = []
     mid_row_x_position = []
-
     bottom_row_o_position = []
     bottom_row_x_position = []
 
     result_list_for_o = []
     result_list_for_x = []
-
     player_o_latest_number = []
     player_x_latest_number = []
 
+    clear_screen()
     print_grid_reference()
-
     game_concluded = False
-
     while not game_concluded:
 
-        valid_number_choice = False
-
-        while not valid_number_choice:
-            player_o_latest_number = int(input(Player_O + ", please enter a number from the reference grid to lay down your naught: "))
-            if player_o_latest_number in used_numbers:
-                print("That number has already been chosen. Try again.")
-            else:
-                used_numbers.append(player_o_latest_number)
-                valid_number_choice = True
-
+        position_of_O_validated()
         update_lists_for_o_positions()
         clear_screen()
         print_grid_reference()
@@ -563,16 +583,7 @@ while play_game:
             would_you_like_to_play_again()
             break
 
-        valid_number_choice = False
-
-        while not valid_number_choice:
-            player_x_latest_number = int(input(Player_X + ", please enter a number from the reference grid to lay down your cross: "))
-            if player_x_latest_number in used_numbers:
-                print("That number has already been chosen. Try again.")
-            else:
-                used_numbers.append(player_x_latest_number)
-                valid_number_choice = True
-
+        position_of_X_validated()
         update_lists_for_x_positions()
         clear_screen()
         print_grid_reference()
